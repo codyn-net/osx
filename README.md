@@ -26,22 +26,23 @@ Prerequisites:
    You will always need to install xcode before you can start to compile anything
    on OS X. Xcode can be installed easily from the App Store. Alternatively, you
    can try installing only the command line tools for Xcode from the apple
-   developer download website ([Xcode command line tools]).
+   developer download website ([Xcode command line tools][Xcode command line tools]).
 
 2. Install git.
    
    git is required to fetch and use homebrew (used to compile the dependencies).
-   You can get git packages for OS X from [git osx installer].
+   You can get git packages for OS X from [git osx installer][git osx installer].
 
 3. Get the codyn sources.
    
    You should create a directory with the following structure:
-     codyn/
-     codyn-sharp/
-     osx/ *(this repository)*)
-     rawc/
+     * codyn/
+     * codyn-sharp/
+     * osx/ *(this repository)*
+     * rawc/
 
-   The sources can be either from [codyn git] or from [codyn releases].
+   The sources can be either from [codyn git][codyn git] or from
+   [codyn releases][codyn releases].
 
 3. Bootstrap the dependencies.
    
