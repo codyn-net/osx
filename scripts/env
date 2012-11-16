@@ -1,0 +1,11 @@
+#!/bin/bash
+
+pushd $(dirname $(dirname "$0")) > /dev/null
+d=$(pwd -P)
+popd > /dev/null
+
+b="$d/brew"
+brew="$b/bin/brew"
+
+export PATH="$b/bin:$PATH"
+export PKG_CONFIG_PATH="$b/lib/pkgconfig:$b/Cellar/libffi/3.0.11/lib/pkgconfig"

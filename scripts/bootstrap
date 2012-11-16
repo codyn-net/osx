@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. $(dirname "$0")/env
+
+if [ ! -f "$brew" ]; then
+	git clone https://github.com/mxcl/homebrew "$d/brew"
+fi
+
+$brew install --universal autoconf automake libtool glib gobject-introspection https://raw.github.com/jessevdk/homebrew-codyn/master/pygobject3.rb

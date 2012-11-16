@@ -1,0 +1,26 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Please specify where directory to build from"
+	exit 1
+fi
+
+. $(dirname "$0")/env
+
+prefix="$d/install"
+
+export CFLAGS='-arch i386 -arch x86_64'
+export LDFLAGS='-arch i386 -arch x86_64'
+
+args="--disable-dependency-tracking --enable-framework --prefix=$prefix"
+
+if [ -f "$1/autogen.sh" ]; then
+	configure="autogen.sh"
+elif [ -f "$1/configure" ]; then
+	configure="configure"
+else
+	echo "Neither autogen.sh nor configure could be found"
+	exit 1
+fi
+
+(cd "$1" && ./$configure $args && make clean && make -j8 install)

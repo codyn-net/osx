@@ -1,0 +1,38 @@
+#!/bin/bash
+
+if [ -z "$1" ]; then
+	echo "Please provide the codyn version (e.g. 3.x)"
+	exit 1
+fi
+
+. $(dirname "$0")/env
+
+version="$1"
+tmp=$(mktemp -d -t make-cdn-pkg)
+
+cp -a "$d/Codyn.framework" "$tmp/"
+sudo chown -R root:admin "$tmp/Codyn.framework"
+
+pkgmaker=/Applications/PackageMaker.app/Contents/MacOS/PackageMaker
+
+cp -a "$d/Codyn.pmdoc" "$tmp/"
+pkg="Codyn-$version.pkg"
+
+mkdir "$tmp/bin"
+
+# Make symbolic links in bin/
+for i in $tmp/Codyn.framework/Resources/bin/*; do
+	b=$(basename "$i")
+
+	ln -s "/Library/Frameworks/Codyn.framework/Resources/bin/$b" "$tmp/bin/$b"
+done
+
+sudo chown -R root:admin "$tmp/bin"
+
+echo "Making package..."
+
+(cd "$tmp" && $pkgmaker -n "$version" -m -d "$tmp/Codyn.pmdoc" -o "$d/$pkg")
+sudo rm -rf "$tmp"
+
+sudo chown $(id -u):$(id -g) "$d/$pkg"
+echo "Created package in $pkg..."

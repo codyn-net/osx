@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. $(dirname "$0")/env
+
+prefix="$d/install"
+
+export CFLAGS='-arch i386 -arch x86_64'
+export LDFLAGS='-arch i386 -arch x86_64'
+
+(cd .. && bash)

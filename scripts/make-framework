@@ -1,0 +1,341 @@
+#!/usr/bin/python
+
+import inspect, os, shutil, subprocess, fnmatch, glob, sys, re, collections
+
+if len(sys.argv) <= 1:
+    print('Please specify the codyn version')
+    sys.exit(1)
+
+version = sys.argv[1]
+api_version = version.split('.')[0] + '.0'
+
+config = {
+    'name': 'Codyn',
+
+    'main': '@installdir@/lib/libcodyn-@api_version@.0.dylib',
+
+    'binaries': {
+        '@installdir@/bin/*': '@resources@/bin/',
+        '@installdir@/lib/codyn-@api_version@/io/*.so': '@resources@/lib/codyn-@api_version@/io/',
+
+        # Python introspection libraries
+        '@brewpydir@/gi/_gi.so': '@pysite-packages@/gi/_gi.so',
+        '@brewpydir@/gi/_glib/_glib.so': '@pysite-packages@/_glib/_glib.so',
+        '@brewpydir@/gi/_gobject/_gobject.so': '@pysite-packages@/_gobject/_gobject.so',
+    },
+
+    'data': {
+        '@installdir@/share/codyn-@api_version@': '@resources@/share/codyn-@api_version@',
+        '@installdir@/share/emacs': '@resources@/share/emacs',
+        '@installdir@/share/gir-1.0/*.gir': '@resources@/share/gir-1.0/',
+        '@installdir@/lib/girepository-1.0/*.typelib': '@resources@/lib/girepository-1.0/',
+
+        # Python introspection python scripts
+        '@brewpydir@/gi/*.py': '@pysite-packages@/gi/',
+        '@brewpydir@/gi/_glib/*.py': '@pysite-packages@/gi/_glib/',
+        '@brewpydir@/gi/_gobject/*.py': '@pysite-packages@/gi/_gobject/',
+        '@brewpydir@/gi/overrides/*.py': '@pysite-packages@/gi/overrides/',
+        '@brewpydir@/gi/repository/*.py': '@pysite-packages@/gi/repository/',
+
+        '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
+    },
+
+    'data_interpolated': {
+        '@rootdir@/data/Info.plist': '@resources@/',
+    },
+
+    'headers': {
+       '@installdir@/include/codyn-@api_version@/codyn/*': '@headers@/',
+       '@brewdir@/include/glib-2.0/*': '@headers@/ext/glib-2.0/',
+       '@brewdir@/lib/glib-2.0/include/glibconfig.h': '@headers@/ext/glib-2.0/',
+    },
+
+    'header_rewrites': {
+        '#include(\s*)<codyn/': '#include\\1<Codyn/',
+        '#include(\s*)<(gio|glib|gobject|gmodule|gthread)': '#include\\1<Codyn/ext/glib-2.0/\\2',
+    },
+
+    'scripts': {
+        # Codyn python script wrapper
+        '@rootdir@/scripts/cdn-python': '@resources@/bin/cdn-python',
+    }
+}
+
+scriptdir = os.path.dirname(os.path.realpath(inspect.getfile(inspect.currentframe())))
+rootdir = os.path.dirname(scriptdir)
+
+installdir = os.path.join(rootdir, 'install')
+brewdir = os.path.join(rootdir, 'brew')
+brewpydir = os.path.join(brewdir, 'lib', 'python2.7', 'site-packages')
+
+def repl(s):
+    return re.sub('@(version|api_version|installdir|rootdir|brewdir|brewpydir)@', lambda x: globals()[x.group(1)], s)
+
+class Framework:
+    # Make basic framework structure
+    # Codyn.framework/
+    #   Headers   -> Versions/A/Headers
+    #   Libraries -> Versions/A/Libraries
+    #   Resources -> Versions/A/Resources
+    #   Versions/
+    #     A/
+    #       Headers/
+    #       Libraries/
+    #       Resources/
+    #     Current -> A
+    def __init__(self, path):
+        suffix = '.framework'
+
+        if path.endswith(suffix):
+            path = path[:len(path) - len(suffix)]
+
+        self._name = os.path.basename(path)
+        self._path = path + '.framework'
+        self._fpath = os.path.realpath(self._path)
+
+        self._versions = self._path + '/Versions'
+        self._versions_a = self._versions + '/A'
+        self._headers = self._versions_a + '/Headers'
+        self._libraries = self._versions_a + '/Libraries'
+        self._resources = self._versions_a + '/Resources'
+
+        self._fwpath = '/Library/Frameworks/' + os.path.basename(self._path)
+
+        shutil.rmtree(self._path, ignore_errors=True)
+
+        for p in (self._headers, self._libraries, self._resources):
+            try:
+                os.makedirs(p)
+            except:
+                pass
+
+        os.symlink('A',  self.versions('Current'))
+        os.symlink('Versions/A/Headers',  self.path('Headers'))
+        os.symlink('Versions/A/Libraries',  self.path('Libraries'))
+        os.symlink('Versions/A/Resources',  self.path('Resources'))
+
+        self._resolved_libs = {}
+
+    def path(self, *args):
+        return self.repl(os.path.join(self._path, *args))
+
+    def a(self, *args):
+        return os.path.join(self._versions_a, *args)
+
+    def versions(self, *args):
+        return os.path.join(self._versions, *args)
+
+    def headers(self, *args):
+        return os.path.join(self._headers, *args)
+
+    def libraries(self, *args):
+        return os.path.join(self._libraries, *args)
+
+    def resources(self, *args):
+        return os.path.join(self._resources, *args)
+
+    def pysite_packages(self, *args):
+        return os.path.join(self._resources, 'lib', 'python2.7', 'site-packages', *args)
+
+    def repl(self, s):
+        repls = {
+            '@headers@': self.headers,
+            '@libraries@': self.libraries,
+            '@resources@': self.resources,
+            '@pysite-packages@': self.pysite_packages,
+        }
+
+        return re.sub("|".join(repls.keys()), lambda x: repls[x.group(0)](), repl(s))
+
+    def fwpath(self, *args):
+        return os.path.join(self._fwpath, *args)
+
+    def future_path(self, p):
+        if not os.path.isabs(p):
+            return self.fwpath(p)
+
+        if p.startswith(self._fpath):
+            return self.fwpath(p[len(self._fpath) + 1:])
+        else:
+            return p
+
+    @property
+    def name(self):
+        return self._name
+
+    def copy_binary(self, binary, target):
+        binary = self.repl(binary)
+        target = self.repl(target)
+
+        target = self._copy(binary, target)
+
+        future = self.future_path(target)
+        self._resolved_libs[os.path.realpath(binary)] = future
+
+        os.chmod(target, 0755)
+
+        # Set the new id of the library
+        if binary.endswith('.so') or binary.endswith('.dylib'):
+            subprocess.call(['strip', '-x', target])
+
+            # Set the new id
+            subprocess.call(['install_name_tool', '-id', future, target])
+        else:
+            subprocess.call(['strip', '-u', '-r', target])
+
+        # Resolve and copy external dependencies
+        self.resolve_deps(target)
+
+    def copy_main(self, binary):
+        self._main = os.path.realpath(binary)
+
+        self.copy_binary(binary, self.a(self._name))
+
+        os.symlink('Versions/A/' + self._name, self.path(self._name))
+        os.symlink('../' + self._name, self.libraries(os.path.basename(self.repl(binary))))
+
+    def otool_deps(self, path):
+        out = subprocess.check_output(['otool', '-L', path])
+        return [x.strip().split(' ')[0] for x in out.splitlines()[1:]]
+
+    def resolve_deps(self, libname):
+        # Run otool to get the deps
+        deps = self.otool_deps(libname)
+
+        for dep in deps:
+            rdep = os.path.realpath(dep)
+
+            if not rdep.startswith(rootdir):
+                continue
+
+            if not rdep in self._resolved_libs:
+                # Copy the dependency
+                name = os.path.basename(rdep)
+                target = self.libraries(name)
+
+                # Go deep
+                self.copy_binary(rdep, target)
+
+            subprocess.call(['install_name_tool', '-change', dep, self._resolved_libs[rdep], libname])
+
+    def _copy_file_name(self, source, target):
+        if target.endswith('/'):
+            return target + os.path.basename(source)
+        else:
+            return target
+
+    def _copy(self, source, target):
+        target = self._copy_file_name(source, target)
+
+        try:
+            os.makedirs(os.path.dirname(target))
+        except:
+            pass
+
+        if os.path.isdir(source):
+            shutil.copytree(source, target)
+        else:
+            shutil.copyfile(source, target)
+
+        return target
+
+    def copy_data(self, data, target):
+        self._copy(data, target)
+
+    def _interpolate_file(self, filename):
+        data = open(filename).read()
+        newdata = self.repl(data)
+
+        if newdata != data:
+            f = open(filename, 'w')
+            f.write(newdata)
+            f.flush()
+            f.close()
+
+    def copy_data_interpolated(self, data, target):
+        target = self._copy(data, target)
+
+        if os.path.isdir(target):
+            for root, dirnames, filenames in os.walk(target):
+                for filename in filenames:
+                    fullname = os.path.join(root, filename)
+                    self._interpolate_file(fullname)
+        else:
+            self._interpolate_file(target)
+
+    def copy_script(self, script, target):
+        target = self._copy(script, target)
+        os.chmod(target, 0755)
+
+    def copy_header(self, header, target):
+        target = self._copy(header, target)
+
+    def copy_glob(self, items, fn):
+        for k in items:
+            g = self.repl(k)
+            files = glob.glob(g)
+
+            if len(files) == 0:
+                print('Warning: The glob `{0}\' did not result in any files'.format(g))
+                continue
+
+            target = self.repl(items[k])
+
+            for f in files:
+                fn(f, target)
+
+    def rewrite_headers(self, rules):
+        remap = {}
+
+        for k in rules:
+            remap[re.compile(k)] = rules[k]
+
+        # Fix include paths. This is a little bit dirty, but I don't really know what to
+        # do with it right now. It could be cool to find out the right mapping from
+        # headers that are public in the main lib, finding all the includes and
+        # rewriting them recursively. Anyway, this works for now
+        for root, dirnames, filenames in os.walk(framework.headers()):
+            for filename in fnmatch.filter(filenames, '*.h'):
+                fullname = os.path.join(root, filename)
+
+                content = open(fullname).read()
+                replaced = content
+
+                for k in remap:
+                    replaced = k.sub(remap[k], replaced)
+
+                if replaced != content:
+                    f = open(fullname, 'w')
+
+                    f.write(replaced)
+
+                    f.flush()
+                    f.close()
+
+# Create the framework
+framework = Framework(os.path.join(rootdir, config['name']))
+
+# Copy main codyn lib
+framework.copy_main(config['main'])
+
+# Copy binaries
+framework.copy_glob(config['binaries'], framework.copy_binary)
+
+# Copy data
+framework.copy_glob(config['data'], framework.copy_data)
+
+# Copy data interpolated
+framework.copy_glob(config['data_interpolated'], framework.copy_data_interpolated)
+
+# Copy scripts
+framework.copy_glob(config['scripts'], framework.copy_script)
+
+# Copy headers
+framework.copy_glob(config['headers'], framework.copy_header)
+
+# Rewrite header includes
+framework.rewrite_headers(config['header_rewrites'])
+
+print('Framework created in {0}.framework'.format(framework.name))
+
+# vi:ts=4:et
