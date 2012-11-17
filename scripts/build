@@ -1,26 +1,40 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-	echo "Please specify where directory to build from"
-	exit 1
-fi
-
 . $(dirname "$0")/env
+
+if [ -z "$1" ]; then
+	root="$d/../"
+else
+	root="$1"
+fi
 
 prefix="$d/install"
 
 export CFLAGS='-arch i386 -arch x86_64'
 export LDFLAGS='-arch i386 -arch x86_64'
 
-args="--disable-dependency-tracking --enable-framework --prefix=$prefix"
+args="--disable-dependency-tracking --prefix=$prefix"
 
-if [ -f "$1/autogen.sh" ]; then
-	configure="autogen.sh"
-elif [ -f "$1/configure" ]; then
-	configure="configure"
-else
-	echo "Neither autogen.sh nor configure could be found"
-	exit 1
+function build
+{
+	if [ -f "$1/autogen.sh" ]; then
+		configure="autogen.sh"
+	elif [ -f "$1/configure" ]; then
+		configure="configure"
+	else
+		echo "Neither autogen.sh nor configure could be found"
+		exit 1
+	fi
+
+	shift 1
+
+	(cd "$1" && ./$configure $args "$@" && make clean && make -j8 install)
+}
+
+build "$root/codyn" --enable-framework
+
+cdnsharp="$root/codyn-sharp"
+
+if [ -d "$cdnsharp" ]; then
+	build "$cdnsharp"
 fi
-
-(cd "$1" && ./$configure $args && make clean && make -j8 install)
