@@ -1,6 +1,6 @@
-/brew
+/.brew
+/.brewbuild
 /Codyn-*.pkg
 /Codyn.framework
-/install
-/make-framework
-/Info.plist
+/.install
+/.install-mono

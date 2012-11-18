@@ -21,10 +21,11 @@ pkg="Codyn-$version.pkg"
 mkdir "$tmp/bin"
 
 # Make symbolic links in bin/
-for i in $tmp/Codyn.framework/Resources/bin/*; do
+for i in $tmp/Codyn.framework/Resources/bin/* $tmp/Codyn.framework/Resources/mono/bin/*; do
+	r=${i#$tmp}
 	b=$(basename "$i")
 
-	ln -s "/Library/Frameworks/Codyn.framework/Resources/bin/$b" "$tmp/bin/$b"
+	ln -s "/Library/Frameworks/$r" "$tmp/bin/$b"
 done
 
 sudo chown -R root:admin "$tmp/bin"

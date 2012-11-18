@@ -4,8 +4,18 @@ pushd $(dirname $(dirname "$0")) > /dev/null
 d=$(pwd -P)
 popd > /dev/null
 
-b="$d/brew"
-brew="$b/bin/brew"
+b="$d/.brew"
+bb="$d/.brewbuild"
 
-export PATH="$b/bin:$PATH"
-export PKG_CONFIG_PATH="$b/lib/pkgconfig:$b/Cellar/libffi/3.0.11/lib/pkgconfig"
+brew="$b/bin/brew"
+brewbuild="$bb/bin/brew"
+
+export PATH="$bb/bin:$PATH"
+export PKG_CONFIG_PATH="$bb/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+if [ -z "$dont_setup_brew" ]; then
+	export PATH="$b/bin:$PATH"
+	export PKG_CONFIG_PATH="$b/lib/pkgconfig:$b/Cellar/libffi/3.0.11/lib/pkgconfig:$PKG_CONFIG_PATH"
+fi
+
+prefix="/Library/Frameworks/Codyn.framework/Resources"
