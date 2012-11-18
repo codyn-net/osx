@@ -85,12 +85,15 @@ cdnrawc="$root/rawc"
 
 if [ -d "$cdnrawc" ]; then
 	(
+		export CFLAGS='-arch i386 -arch x86_64'
+		export LDFLAGS='-arch i386 -arch x86_64'
+
 		mono_env
 
 		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
 
 		export PKG_CONFIG_PATH="$pf/lib/pkgconfig:$PKG_CONFIG_PATH"
 
-		build "$cdnrawc" --enable-release --with-framework="$pf" || exit 1
+		build "$cdnrawc" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
 	) || exit 1
 fi
