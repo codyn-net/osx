@@ -25,8 +25,8 @@ config = {
 
         # Python introspection libraries
         '@brewpydir@/gi/_gi.so': '@pysite-packages@/gi/_gi.so',
-        '@brewpydir@/gi/_glib/_glib.so': '@pysite-packages@/_glib/_glib.so',
-        '@brewpydir@/gi/_gobject/_gobject.so': '@pysite-packages@/_gobject/_gobject.so',
+        '@brewpydir@/gi/_glib/_glib.so': '@pysite-packages@/gi/_glib/_glib.so',
+        '@brewpydir@/gi/_gobject/_gobject.so': '@pysite-packages@/gi/_gobject/_gobject.so',
     },
 
     'data': {
