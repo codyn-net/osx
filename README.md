@@ -47,7 +47,7 @@ Prerequisites:
 3. Bootstrap the dependencies.
    
    Run `scripts/bootstrap` to initialize homebrew and compile the dependencies.
-   The resulting files will be installed in `osx/brew`.
+   The resulting files will be installed in `osx/.brew` and `osx/.brewbuild`.
    
    All the dependencies are compiled as universal binaries. Where possible,
    OS X system libraries (such as libxml2) are used.
@@ -55,10 +55,20 @@ Prerequisites:
 3. Build codyn.
    
    Run `scripts/build` to build codyn. The resulting files will be installed in
-   `osx/install`.
+   `osx/.install` and `osx/.install-mono`.
 
    This will compile codyn with the correct flags to make a universal
-   dynamic library suitable for inclusion in an OS X framework.
+   dynamic library suitable for inclusion in an OS X framework. At the moment
+   two versions of the codyn library will be built. The first is a universal
+   binary linked against bundled dynamic libraries of glib, gobject etc. This
+   library can be used when developing an application against codyn. The second
+   library is built in `osx/.install-mono` and is only used in combination with
+   the C# bindings (needed by rawc and the studio). This is needed currently
+   because mono ships with its own version of glib/gobject and mono is only
+   available in 32 bits at this moment.
+   
+   When available, codyn-sharp and rawc are also built and installed in
+   `osx/.install-mono` and will be bundled in the framework.
 
 4. Build the framework.
    
@@ -67,14 +77,17 @@ Prerequisites:
    just the version of codyn that you compiled).
 
    This will result in a `osx/Codyn.framework` directory which contains the
-   codyn binaries as a self-contained OS X framework.
+   codyn binaries as a self-contained OS X framework. It will also provide
+   all the necessary setup and bundled libraries to run rawc using mono.
 
 5. Build the installer.
    
    Run `scripts/make-pkg <version>` to build the framework installer. After
    completion, the result package `osx/Codyn-<version>.pkg` should be
    available which installs the framework into
-   /Library/Frameworks/Codyn.framework.
+   /Library/Frameworks/Codyn.framework. The package simply installs the
+   framework in /Library/Frameworks and creates some symlinks for the cdn-
+   binaries in /usr/bin.
 
 [homebrew]: https://github.com/mxcl/homebrew
 [git osx installer]: http://code.google.com/p/git-osx-installer/downloads/list
