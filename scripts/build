@@ -77,7 +77,7 @@ function mono_env
 	mono_env
 
 	# Build codyn also again specifically for use with mono
-	build "$root/codyn" || exit 1
+	build "$root/codyn" --datadir="/Library/Frameworks/Codyn.framework/Resources/share" || exit 1
 ) || exit 1;
 
 # Build codyn sharp if possible
