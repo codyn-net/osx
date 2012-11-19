@@ -65,6 +65,8 @@ function mono_env
 
 	# install in .install
 	destdir="$d/.install"
+
+	echo "Building codyn..."
 	build "$root/codyn" --disable-dependency-tracking  --enable-framework || exit 1
 ) || exit 1;
 
@@ -77,6 +79,7 @@ function mono_env
 	mono_env
 
 	# Build codyn also again specifically for use with mono
+	echo "Building codyn for mono..."
 	build "$root/codyn" --datadir="/Library/Frameworks/Codyn.framework/Resources/share" || exit 1
 ) || exit 1;
 
@@ -87,6 +90,7 @@ if [ -d "$cdnsharp" ]; then
 	(
 		mono_env
 
+		echo "Building codyn sharp..."
 		build "$cdnsharp" --enable-release || exit 1
 	) || exit 1
 else
