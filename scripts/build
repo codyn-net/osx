@@ -25,7 +25,18 @@ function build
 		exit 1
 	fi
 
-	(cd "$bdir" && ./$configure $args "$@" && make clean && make -j8 && make install DESTDIR="$destdir")
+	tmp=$(mktemp -t codyn-build)
+
+	(cd "$bdir" && ./$configure $args "$@" && make clean && make -j8 && make install DESTDIR="$destdir") &>$tmp
+
+	retval=$?
+
+	if [ $retval -ne 0 ]; then
+		cat "$tmp"
+	fi
+
+	rm "$tmp"
+	return $retval
 }
 
 # This function sets up an environment suitable for compiling against the
