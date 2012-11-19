@@ -89,6 +89,8 @@ if [ -d "$cdnsharp" ]; then
 
 		build "$cdnsharp" --enable-release || exit 1
 	) || exit 1
+else
+	exit 0
 fi
 
 # Build rawc if possible
@@ -101,9 +103,28 @@ if [ -d "$cdnrawc" ]; then
 
 		mono_env
 
-		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
-
-
+		echo "Building rawc..."
 		build "$cdnrawc" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
 	) || exit 1
+fi
+
+biorobmath="$root/biorob-math-sharp"
+plotsharp="$root/plot-sharp"
+studio="$root/studio"
+
+if [ -d "$plotsharp" ] && [ -d "$studio" ]; then
+	(
+		mono_env
+
+		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
+
+		echo "Building biorob math sharp"
+		build "$biorobmath" --enable-release || exit 1
+
+		echo "Building plot sharp"
+		build "$plotsharp" --enable-release --with-framework="$pf" || exit 1
+
+		echo "Building studio"
+		build "$studio" --enable-release --with-framework="$pf" || exit 1
+	)
 fi
