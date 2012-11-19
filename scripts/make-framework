@@ -31,7 +31,8 @@ config = {
 
     'data': {
         '@installdir@/share/codyn-@api_version@': '@resources@/share/codyn-@api_version@',
-        '@installdir@/share/emacs': '@resources@/share/emacs',
+        '@installdir@/share/emacs': '@resources@/share/',
+        '@installdir@/share/texmf': '@resources@/share/',
         '@installdir@/share/gir-1.0/*.gir': '@resources@/share/gir-1.0/',
         '@installdir@/lib/girepository-1.0/*.typelib': '@resources@/lib/girepository-1.0/',
 
@@ -48,6 +49,14 @@ config = {
         '@monoinstalldir@/share/cdn-rawc-1.0': '@resources@/mono/share/',
         '@monoinstalldir@/lib/pkgconfig/cdn-rawc-1.0.pc': '@resources@/mono/lib/pkgconfig/',
         '@monoinstalldir@/lib/cdnrawc/Codyn.dll.config': '@resources@/mono/lib/cdnrawc/',
+
+        # Studio
+        '@monoinstalldir@/lib/cdn-studio/*.config': '@resources@/mono/lib/cdn-studio/',
+        '@monoinstalldir@/share/cdnstudio': '@resources@/mono/share/',
+
+        '@monoinstalldir@/share/icons': '@resources@/mono/share/',
+        '@monoinstalldir@/share/applications': '@resources@/mono/share/',
+        '@monoinstalldir@/share/mime': '@resources@/mono/share/',
     },
 
     'data_interpolated': {
@@ -75,6 +84,11 @@ config = {
         '@monoinstalldir@/lib/cdnrawc/Cdn.RawC.dll': '@resources@/mono/lib/cdnrawc/',
         '@monoinstalldir@/lib/cdnrawc/Codyn.dll': '@resources@/mono/lib/cdnrawc/',
         '@monoinstalldir@/lib/cdnrawc/cdn-rawc.exe': '@resources@/mono/lib/cdnrawc/',
+
+        # Studio
+        '@monoinstalldir@/bin/cdn-studio': '@resources@/mono/bin/cdn-studio',
+        '@monoinstalldir@/lib/cdn-studio/*.dll': '@resources@/mono/lib/cdn-studio/',
+        '@monoinstalldir@/lib/cdn-studio/cdn-studio.exe': '@resources@/mono/lib/cdn-studio/',
     }
 }
 
@@ -206,9 +220,14 @@ class Framework:
         self.resolve_deps(target)
 
     def copy_main(self, binary):
+        binary = self.repl(binary)
         self._main = os.path.realpath(binary)
 
-        self.copy_binary(binary, self.a(self._name))
+        target = self.a(self._name)
+        self.copy_binary(binary, target)
+
+        internal = os.path.join(self._fwpath, 'Resources/lib/', os.path.basename(binary))
+        self._resolved_libs[internal] = target
 
         os.symlink('Versions/A/' + self._name, self.path(self._name))
         os.symlink('../' + self._name, self.libraries(os.path.basename(self.repl(binary))))
@@ -224,7 +243,7 @@ class Framework:
         for dep in deps:
             rdep = os.path.realpath(dep)
 
-            if not rdep.startswith(rootdir):
+            if not rdep.startswith(rootdir) and not rdep in self._resolved_libs:
                 continue
 
             if not rdep in self._resolved_libs:
@@ -235,6 +254,7 @@ class Framework:
                 # Go deep
                 self.copy_binary(rdep, target)
 
+            #print os.path.basename(libname), dep, self._resolved_libs[rdep]
             subprocess.call(['install_name_tool', '-change', dep, self._resolved_libs[rdep], libname])
 
     def _copy_file_name(self, source, target):
