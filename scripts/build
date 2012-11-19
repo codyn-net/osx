@@ -50,7 +50,7 @@ function mono_env
 	destdir="$d/.install-mono"
 	prefix="/Library/Frameworks/Codyn.framework/Resources/mono"
 
-	export PKG_CONFIG_PATH="$fwroot/lib/pkgconfig:$PKG_CONFIG_PATH"
+	export PKG_CONFIG_PATH="$fwroot/lib/pkgconfig:$destdir$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
 	export PATH="$fwroot/bin:$PATH"
 }
 
@@ -103,7 +103,6 @@ if [ -d "$cdnrawc" ]; then
 
 		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
 
-		export PKG_CONFIG_PATH="$pf/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 		build "$cdnrawc" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
 	) || exit 1
