@@ -3,11 +3,7 @@
 dont_setup_brew=1
 source $(dirname "$0")/env
 
-if [ -z "$1" ]; then
-	root="$d/../"
-else
-	root="$1"
-fi
+root=..
 
 function build
 {
@@ -54,8 +50,18 @@ function mono_env
 	export PATH="$fwroot/bin:$PATH"
 }
 
-# Build normal codyn library
-(
+codyn_dir="$root/codyn"
+cdnsharp_dir="$root/codyn-sharp"
+cdnrawc_dir="$root/rawc"
+studio_dir="$root/studio"
+
+function build_codyn
+{(
+	if [ ! -d "$codyn_dir" ]; then
+		echo "Could not find the codyn sources in $codyn_dir..."
+		exit 1
+	fi
+
 	export CFLAGS='-arch i386 -arch x86_64'
 	export LDFLAGS='-arch i386 -arch x86_64'
 
@@ -67,12 +73,18 @@ function mono_env
 	destdir="$d/.install"
 
 	echo "Building codyn..."
-	build "$root/codyn" --disable-dependency-tracking  --enable-framework || exit 1
-) || exit 1;
+	build "$codyn_dir" --disable-dependency-tracking  --enable-framework || exit 1
+) || exit 1;}
 
-# Build codyn library but for use with mono. This means building just 32 bits and
-# using the mono provided glib libraries
-(
+function build_codyn_mono
+{(
+	if [ ! -d "$codyn_dir" ]; then
+		echo "Could not find the codyn sources in $codyn_dir..."
+		exit 1
+	fi
+
+	# Build codyn library but for use with mono. This means building just
+	# 32 bits and using the mono provided glib libraries
 	export CFLAGS='-arch i386'
 	export LDFLAGS='-arch i386'
 
@@ -81,55 +93,86 @@ function mono_env
 	# Build codyn also again specifically for use with mono
 	echo "Building codyn for mono..."
 	build "$root/codyn" --datadir="/Library/Frameworks/Codyn.framework/Resources/share" || exit 1
-) || exit 1;
+) || exit 1;}
 
-# Build codyn sharp if possible
-cdnsharp="$root/codyn-sharp"
+function build_codyn_sharp
+{(
+	mono_env
 
-if [ -d "$cdnsharp" ]; then
-	(
-		mono_env
+	echo "Building codyn sharp..."
+	build "$cdnsharp_dir" --enable-release || exit 1
+) || exit 1;}
 
-		echo "Building codyn sharp..."
-		build "$cdnsharp" --enable-release || exit 1
-	) || exit 1
+function build_rawc
+{(
+	if [ ! -d "$cdnrawc_dir" ]; then
+		echo "Could not find the rawc sources in $cdnrawc_dir..."
+		exit 1
+	fi
+
+	export CFLAGS='-arch i386 -arch x86_64'
+	export LDFLAGS='-arch i386 -arch x86_64'
+
+	mono_env
+	pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
+
+	echo "Building rawc in $cdnrawc_dir..."
+	build "$cdnrawc_dir" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
+) || exit 1;}
+
+function build_studio
+{(
+	if [ ! -d "$studio_dir" ]; then
+		echo "Could not find the studio sources in $studio_dir..."
+		exit 1
+	fi
+
+	biorobmath_dir="$root/biorob-math-sharp"
+
+	if [ ! -d "$biorobmath_dir" ]; then
+		echo "Could not find the biorob-math-sharp sources in $biorobmath_dir..."
+		exit 1
+	fi
+
+	plotsharp_dir="$root/plot-sharp"
+
+	if [ ! -d "$plotsharp_dir" ]; then
+		echo "Could not find the plot-sharp sources in $plotsharp_dir..."
+		exit 1
+	fi
+
+	mono_env
+
+	pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
+
+	echo "Building biorob math sharp"
+	build "$biorobmath_dir" --enable-release || exit 1
+
+	echo "Building plot sharp"
+	build "$plotsharp_dir" --enable-release --with-framework="$pf" || exit 1
+
+	echo "Building studio"
+	build "$studio_dir" --enable-release --with-framework="$pf" || exit 1
+) || exit 1;}
+
+if [ -z "$@" ]; then
+	builds="codyn codyn_mono"
+
+	if [ -d "$cdnsharp_dir" ]; then
+		builds="$builds codyn_sharp"
+	fi
+
+	if [ -d "$cdnrawc_dir" ]; then
+		builds="$builds rawc"
+	fi
+
+	if [ -d "$studio_dir" ]; then
+		builds="$builds studio"
+	fi
 else
-	exit 0
+	builds="$@"
 fi
 
-# Build rawc if possible
-cdnrawc="$root/rawc"
-
-if [ -d "$cdnrawc" ]; then
-	(
-		export CFLAGS='-arch i386 -arch x86_64'
-		export LDFLAGS='-arch i386 -arch x86_64'
-
-		mono_env
-		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
-
-		echo "Building rawc..."
-		build "$cdnrawc" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
-	) || exit 1
-fi
-
-biorobmath="$root/biorob-math-sharp"
-plotsharp="$root/plot-sharp"
-studio="$root/studio"
-
-if [ -d "$biorobmath" ] && [ -d "$plotsharp" ] && [ -d "$studio" ]; then
-	(
-		mono_env
-
-		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
-
-		echo "Building biorob math sharp"
-		build "$biorobmath" --enable-release || exit 1
-
-		echo "Building plot sharp"
-		build "$plotsharp" --enable-release --with-framework="$pf" || exit 1
-
-		echo "Building studio"
-		build "$studio" --enable-release --with-framework="$pf" || exit 1
-	)
-fi
+for b in $builds; do
+	build_${b}
+done
