@@ -72,9 +72,9 @@ Prerequisites:
 
 4. Build the framework.
    
-   Run `scripts/make-framework <version>` to build the codyn framework. The
-   version has to be explicitly specified at the moment (i.e. this should be
-   just the version of codyn that you compiled).
+   Run `scripts/make-framework [<version>]` to build the codyn framework. The
+   version specified is optional and when omitted is extracted from
+   `codyn/configure.ac`.
 
    This will result in a `osx/Codyn.framework` directory which contains the
    codyn binaries as a self-contained OS X framework. It will also provide
