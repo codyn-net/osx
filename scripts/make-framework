@@ -44,6 +44,12 @@ config = {
         '@brewpydir@/gi/_gi.so': '@pysite-packages@/gi/_gi.so',
         '@brewpydir@/gi/_glib/_glib.so': '@pysite-packages@/gi/_glib/_glib.so',
         '@brewpydir@/gi/_gobject/_gobject.so': '@pysite-packages@/gi/_gobject/_gobject.so',
+
+        # Python 3 introspection libraries
+        '@brewpy3dir@/gi/_gi.so': '@py3site-packages@/gi/_gi.so',
+        '@brewpy3dir@/gi/_glib/_glib.so': '@py3site-packages@/gi/_glib/_glib.so',
+        '@brewpy3dir@/gi/_gobject/_gobject.so': '@py3site-packages@/gi/_gobject/_gobject.so',
+
     },
 
     'data': {
@@ -61,6 +67,15 @@ config = {
         '@brewpydir@/gi/repository/*.py': '@pysite-packages@/gi/repository/',
 
         '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
+
+        # Python 3 introspection python scripts
+        '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
+        '@brewpy3dir@/gi/_glib/*.py': '@py3site-packages@/gi/_glib/',
+        '@brewpy3dir@/gi/_gobject/*.py': '@py3site-packages@/gi/_gobject/',
+        '@brewpy3dir@/gi/overrides/*.py': '@py3site-packages@/gi/overrides/',
+        '@brewpy3dir@/gi/repository/*.py': '@py3site-packages@/gi/repository/',
+
+        '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@py3site-packages@/gi/overrides/',
 
         # Rawc
         '@monoinstalldir@/share/cdn-rawc-1.0': '@resources@/mono/share/',
@@ -117,9 +132,10 @@ monoinstalldir = os.path.join(rootdir, '.install-mono/Library/Frameworks/Codyn.f
 
 brewdir = os.path.join(rootdir, '.brew')
 brewpydir = os.path.join(brewdir, 'lib', 'python2.7', 'site-packages')
+brewpy3dir = os.path.join(brewdir, 'lib', 'python3.3', 'site-packages')
 
 def repl(s):
-    return re.sub('@(version|api_version|installdir|monoinstalldir|rootdir|brewdir|brewpydir)@', lambda x: globals()[x.group(1)], s)
+    return re.sub('@(version|api_version|installdir|monoinstalldir|rootdir|brewdir|brewpydir|brewpy3dir)@', lambda x: globals()[x.group(1)], s)
 
 class Framework:
     # Make basic framework structure
@@ -187,12 +203,16 @@ class Framework:
     def pysite_packages(self, *args):
         return os.path.join(self._resources, 'lib', 'python2.7', 'site-packages', *args)
 
+    def py3site_packages(self, *args):
+        return os.path.join(self._resources, 'lib', 'python3.3', 'site-packages', *args)
+
     def repl(self, s):
         repls = {
             '@headers@': self.headers,
             '@libraries@': self.libraries,
             '@resources@': self.resources,
             '@pysite-packages@': self.pysite_packages,
+            '@py3site-packages@': self.py3site_packages,
         }
 
         return re.sub("|".join(repls.keys()), lambda x: repls[x.group(0)](), repl(s))
