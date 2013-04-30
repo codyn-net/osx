@@ -117,7 +117,7 @@ biorobmath="$root/biorob-math-sharp"
 plotsharp="$root/plot-sharp"
 studio="$root/studio"
 
-if [ -d "$plotsharp" ] && [ -d "$studio" ]; then
+if [ -d "$biorobmath" ] && [ -d "$plotsharp" ] && [ -d "$studio" ]; then
 	(
 		mono_env
 
