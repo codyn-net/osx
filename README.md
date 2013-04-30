@@ -33,18 +33,27 @@ Prerequisites:
    git is required to fetch and use homebrew (used to compile the dependencies).
    You can get git packages for OS X from [git osx installer][git osx installer].
 
-3. Get the codyn sources.
+3. Install python3
+...
+...Python3 should be installed from the latest [python3 release][python3 release]
+   to support the pygobject bindings for python3. This is mainly needed for the
+   blender support.
+
+4. Get the codyn sources.
    
    You should create a directory with the following structure:
      * codyn/
      * codyn-sharp/
      * osx/ *(this repository)*
      * rawc/
+     * biorob-math-sharp/
+     * plot-sharp/
+     * studio/
 
    The sources can be either from [codyn git][codyn git] or from
    [codyn releases][codyn releases].
 
-3. Bootstrap the dependencies.
+5. Bootstrap the dependencies.
    
    Run `scripts/bootstrap` to initialize homebrew and compile the dependencies.
    The resulting files will be installed in `osx/.brew` and `osx/.brewbuild`.
@@ -52,7 +61,7 @@ Prerequisites:
    All the dependencies are compiled as universal binaries. Where possible,
    OS X system libraries (such as libxml2) are used.
 
-3. Build codyn.
+6. Build codyn.
    
    Run `scripts/build` to build codyn. The resulting files will be installed in
    `osx/.install` and `osx/.install-mono`.
@@ -70,7 +79,7 @@ Prerequisites:
    When available, codyn-sharp and rawc are also built and installed in
    `osx/.install-mono` and will be bundled in the framework.
 
-4. Build the framework.
+7. Build the framework.
    
    Run `scripts/make-framework [<version>]` to build the codyn framework. The
    version specified is optional and when omitted is extracted from
@@ -80,7 +89,7 @@ Prerequisites:
    codyn binaries as a self-contained OS X framework. It will also provide
    all the necessary setup and bundled libraries to run rawc using mono.
 
-5. Build the installer.
+8. Build the installer.
    
    Run `scripts/make-pkg <version>` to build the framework installer. After
    completion, the result package `osx/Codyn-<version>.pkg` should be
@@ -94,3 +103,4 @@ Prerequisites:
 [Xcode command line tools]: https://developer.apple.com/downloads/index.action?name=for%20Xcode%20-
 [codyn git]: http://git.codyn.net
 [codyn releases]: http://download.codyn.net/releases
+[python3 release]: http://www.python.org/getit/
