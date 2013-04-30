@@ -94,7 +94,7 @@ function build_codyn_mono
 
 	# Build codyn also again specifically for use with mono
 	echo "Building codyn for mono..."
-	build "$root/codyn" --datadir="/Library/Frameworks/Codyn.framework/Resources/share" || exit 1
+	build "$root/codyn" || exit 1
 ) || exit 1;}
 
 function build_codyn_sharp
