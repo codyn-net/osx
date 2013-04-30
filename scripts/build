@@ -69,11 +69,13 @@ function build_codyn
 	unset dont_setup_brew
 	source $(dirname "$0")/env
 
+	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$b/Cellar/libffi/3.0.13/lib/pkgconfig"
+
 	# install in .install
 	destdir="$d/.install"
 
 	echo "Building codyn..."
-	build "$codyn_dir" --disable-dependency-tracking  --enable-framework || exit 1
+	build "$codyn_dir" --disable-dependency-tracking --enable-framework || exit 1
 ) || exit 1;}
 
 function build_codyn_mono
