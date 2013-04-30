@@ -2,11 +2,28 @@
 
 import inspect, os, shutil, subprocess, fnmatch, glob, sys, re, collections
 
-if len(sys.argv) <= 1:
-    print('Please specify the codyn version')
-    sys.exit(1)
+version = None
 
-version = sys.argv[1]
+if len(sys.argv) <= 1:
+    try:
+        f = open('../codyn/configure.ac', 'r')
+        r = re.compile('AC_INIT\\(codyn, ([0-9.]+)\\)')
+
+        for line in f.readlines():
+            m = r.match(line)
+
+            if not m is None:
+                version = m.group(1)
+                break
+
+        f.close()
+    finally:
+        if version is None:
+            stderr.write('Please provide the framework version...\n')
+            sys.exit(1)
+else:
+    version = sys.argv[1]
+
 api_version = version.split('.')[0] + '.0'
 
 config = {
