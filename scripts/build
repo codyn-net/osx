@@ -106,6 +106,7 @@ if [ -d "$cdnrawc" ]; then
 		export LDFLAGS='-arch i386 -arch x86_64'
 
 		mono_env
+		pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
 
 		echo "Building rawc..."
 		build "$cdnrawc" --enable-release --disable-dependency-tracking --with-framework="$pf" || exit 1
