@@ -12,4 +12,15 @@ if [ ! -f "$brew" ]; then
 	git clone https://github.com/mxcl/homebrew "$b"
 fi
 
-$brew install --universal autoconf automake libtool glib gobject-introspection https://raw.github.com/jessevdk/homebrew-codyn/master/pygobject3.rb
+$brew tap jessevdk/codyn
+
+$brew install --universal \
+	autoconf \
+	automake \
+	libtool \
+	glib \
+	jessevdk/codyn/gobject-introspection \
+	jessevdk/codyn/py3cairo \
+	jessevdk/codyn/pygobject3 \
+	jessevdk/codyn/py3gobject3 \
+	jessevdk/codyn/json-glib
