@@ -299,7 +299,6 @@ class Framework:
                 # Go deep
                 self.copy_binary(rdep, target)
 
-            #print os.path.basename(libname), dep, self._resolved_libs[rdep]
             subprocess.call(['install_name_tool', '-change', dep, self._resolved_libs[rdep], libname])
 
     def _copy_file_name(self, source, target):
