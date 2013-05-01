@@ -32,7 +32,12 @@ config = {
     'main': '@installdir@/lib/libcodyn-@api_version@.0.dylib',
 
     'binaries': {
-        '@installdir@/bin/*': '@resources@/bin/',
+        '@installdir@/bin/cdn-compile': '@resources@/bin/',
+        '@installdir@/bin/cdn-render': '@resources@/bin/',
+        '@installdir@/bin/cdn-context': '@resources@/bin/',
+        '@installdir@/bin/cdn-monitor': '@resources@/bin/',
+        '@installdir@/bin/cdn-parser': '@resources@/bin/',
+
         '@installdir@/lib/codyn-@api_version@/io/*.so': '@resources@/lib/codyn-@api_version@/io/',
 
         # binaries for use with mono
