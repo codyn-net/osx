@@ -86,6 +86,8 @@ config = {
         '@monoinstalldir@/share/cdn-rawc-1.0': '@resources@/mono/share/',
         '@monoinstalldir@/lib/pkgconfig/cdn-rawc-1.0.pc': '@resources@/mono/lib/pkgconfig/',
         '@monoinstalldir@/lib/cdnrawc/Codyn.dll.config': '@resources@/mono/lib/cdnrawc/',
+        '@monoinstalldir@/lib/cdnrawc/Cdn.RawC.dll.config': '@resources@/mono/lib/cdnrawc/',
+        '@monoinstalldir@/lib/libcdnrawc-1.0.a': '@resources@/mono/lib/',
 
         # Studio
         '@monoinstalldir@/lib/cdn-studio/*.config': '@resources@/mono/lib/cdn-studio/',
