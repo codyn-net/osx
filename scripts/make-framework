@@ -272,6 +272,7 @@ class Framework:
 
         internal = os.path.join(self._fwpath, 'Resources/lib/', os.path.basename(binary))
         self._resolved_libs[internal] = target
+        self._resolved_libs[os.path.realpath(internal)] = target
 
         os.symlink('Versions/A/' + self._name, self.path(self._name))
         os.symlink('../' + self._name, self.libraries(os.path.basename(self.repl(binary))))
