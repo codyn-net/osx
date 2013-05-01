@@ -23,7 +23,11 @@ function build
 
 	tmp=$(mktemp -t codyn-build)
 
-	(cd "$bdir" && ./$configure $args "$@" && make clean && make -j8 && make install DESTDIR="$destdir") &>$tmp
+	if [ ! -z "$CODYN_SHELL" ]; then
+		(cd "$bdir" && echo "./$configure $args $@" && echo "make install DESTDIR=\"$destdir\"" && bash)
+	else
+		(cd "$bdir" && ./$configure $args "$@" && make clean && make -j8 && make install DESTDIR="$destdir") &>$tmp
+	fi
 
 	retval=$?
 
