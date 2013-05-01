@@ -116,6 +116,7 @@ config = {
     'scripts': {
         # Codyn python script wrapper
         '@rootdir@/scripts/cdn-python': '@resources@/bin/cdn-python',
+        '@installdir@/bin/cdn-monitor-i': '@resources@/bin/',
 
         # Rawc
         '@monoinstalldir@/bin/cdn-rawc': '@resources@/mono/bin/cdn-rawc',
