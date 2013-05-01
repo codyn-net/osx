@@ -95,7 +95,6 @@ config = {
 
         '@monoinstalldir@/share/icons': '@resources@/mono/share/',
         '@monoinstalldir@/share/applications': '@resources@/mono/share/',
-        '@monoinstalldir@/share/mime': '@resources@/mono/share/',
     },
 
     'data_interpolated': {
