@@ -72,6 +72,10 @@ config = {
 
         '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
 
+        # Python rawc bindings
+        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': '@pysite-packages@/cdnrawc/',
+        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': '@py3site-packages@/cdnrawc/',
+
         # Python 3 introspection python scripts
         '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
         '@brewpy3dir@/gi/_glib/*.py': '@py3site-packages@/gi/_glib/',
