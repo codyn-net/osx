@@ -54,7 +54,6 @@ config = {
         '@brewpy3dir@/gi/_gi.so': '@py3site-packages@/gi/_gi.so',
         '@brewpy3dir@/gi/_glib/_glib.so': '@py3site-packages@/gi/_glib/_glib.so',
         '@brewpy3dir@/gi/_gobject/_gobject.so': '@py3site-packages@/gi/_gobject/_gobject.so',
-
     },
 
     'data': {
