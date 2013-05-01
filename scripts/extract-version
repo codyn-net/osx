@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+import sys, re
+
+version = None
+
+if len(sys.argv) <= 1:
+    try:
+        f = open('../codyn/configure.ac', 'r')
+        r = re.compile('AC_INIT\\(codyn, ([0-9.]+)\\)')
+
+        for line in f.readlines():
+            m = r.match(line)
+
+            if not m is None:
+                version = m.group(1)
+                break
+
+        f.close()
+    finally:
+        if version is None:
+            sys.stderr.write('Please provide the framework version...\n')
+            sys.exit(1)
+else:
+    version = sys.argv[1]
+
+print(version)

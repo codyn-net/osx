@@ -1,13 +1,9 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
-	echo "Please provide the codyn version (e.g. 3.x)"
-	exit 1
-fi
+version=$($(dirname $0)/extract-version) || exit 1
 
 . $(dirname "$0")/env
 
-version="$1"
 tmp=$(mktemp -d -t make-cdn-pkg)
 
 cp -a "$d/Codyn.framework" "$tmp/"
