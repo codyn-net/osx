@@ -119,6 +119,7 @@ config = {
     'scripts': {
         # Codyn python script wrapper
         '@rootdir@/scripts/cdn-python': '@resources@/bin/cdn-python',
+        '@rootdir@/scripts/cdn-blender': '@resources@/bin/cdn-blender',
         '@installdir@/bin/cdn-monitor-i': '@resources@/bin/',
 
         # Rawc

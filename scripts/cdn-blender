@@ -1,0 +1,12 @@
+#!/bin/bash
+
+fw="/Library/Frameworks/Codyn.framework"
+res="$fw/Resources"
+
+# Setup some stuff
+export GI_TYPELIB_PATH="$res/lib/girepository-1.0:$GI_TYPELIB_PATH"
+export GIR_DIRS="$res/share/gir-1.0:$GIR_DIRS"
+export PYTHONPATH="$res/lib/python3.3/site-packages:$PYTHONPATH"
+export DYLD_LIBRARY_PATH="$fw/Libraries:$DYLD_LIBRARY_PATH"
+
+open -a blender
