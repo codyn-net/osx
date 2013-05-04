@@ -4,6 +4,42 @@ dont_setup_brew=1
 source $(dirname "$0")/env
 
 root=..
+noconfigure=
+verbose=
+libonly=
+
+while getopts ":nvhl" opt; do
+	case $opt in
+		n)
+			noconfigure=1
+		;;
+		v)
+			verbose=1
+		;;
+		l)
+			libonly=1
+		;;
+		h)
+			echo "";
+			echo "Usage: $0 [OPTIONS] [<targets>]";
+			echo "";
+			echo "Build all, or a subset of, codyn components. Valid targets are \`codyn', \`codyn_mono', \`codyn_sharp', \`rawc' and \`studio'. If no targets are specified, then all components will be built.";
+			echo "";
+			echo "Options:";
+			echo "  -n    Do not run configure, only make";
+			echo "  -v    Be verbose";
+			echo "  -l    Only build library (valid only for codyn or codyn_mono target)"
+			echo "  -h    Show this help message";
+			echo "";
+			exit 1;
+		;;
+		\?)
+			echo "Invalid option: -$OPTARG" >&2
+		;;
+	esac
+done
+
+shift $((OPTIND-1))
 
 function build
 {
@@ -21,21 +57,41 @@ function build
 		exit 1
 	fi
 
-	tmp=$(mktemp -t codyn-build)
+	if [ ! -z "$verbose" ]; then
+		tmp=/dev/stdout
+	else
+		tmp=$(mktemp -t codyn-build)
+	fi
 
 	if [ ! -z "$CODYN_SHELL" ]; then
 		(cd "$bdir" && echo "./$configure $args $@" && echo "make install DESTDIR=\"$destdir\"" && bash)
+		retval=$?
 	else
-		(cd "$bdir" && ./$configure $args "$@" && make clean && make -j8 && make install DESTDIR="$destdir") &>$tmp
+		retval=0
+
+		if [ -z "$noconfigure" ]; then
+			(cd "$bdir" && ./$configure $args "$@" && make clean) &>$tmp;
+			retval=$?
+		fi
+
+		if [ ! -z "$libonly" ] && [ $bdir == "$root/codyn" ]; then
+			bdir="$bdir/codyn";
+		fi
+
+		if [ $retval -eq 0 ]; then
+			(cd "$bdir" && make -j8 && make install DESTDIR="$destdir") 2>&1 >> $tmp;
+			retval=$?
+		fi
 	fi
 
-	retval=$?
+	if [ -z "$verbose" ]; then
+		if [ $retval -ne 0 ]; then
+			cat "$tmp"
+		fi
 
-	if [ $retval -ne 0 ]; then
-		cat "$tmp"
+		rm "$tmp"
 	fi
 
-	rm "$tmp"
 	return $retval
 }
 
@@ -164,7 +220,7 @@ function build_studio
 	build "$studio_dir" --enable-release --with-framework="$pf" || exit 1
 ) || exit 1;}
 
-if [ -z "$@" ]; then
+if [ -z "$1" ]; then
 	builds="codyn codyn_mono"
 
 	if [ -d "$cdnsharp_dir" ]; then
