@@ -9,4 +9,8 @@ export GIR_DIRS="$res/share/gir-1.0:$GIR_DIRS"
 export PYTHONPATH="$res/lib/python3.3/site-packages:$PYTHONPATH"
 export DYLD_LIBRARY_PATH="$fw/Libraries:$DYLD_LIBRARY_PATH"
 
-open -a blender
+if [ ! -z "$DEBUG_BLENDER" ]; then
+	exec /Applications/blender.app/Contents/MacOS/blender "$@"
+else
+	open -a blender
+fi
