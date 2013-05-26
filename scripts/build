@@ -7,8 +7,9 @@ root=..
 noconfigure=
 verbose=
 libonly=
+debug=
 
-while getopts ":nvhl" opt; do
+while getopts ":nvhld" opt; do
 	case $opt in
 		n)
 			noconfigure=1
@@ -19,6 +20,9 @@ while getopts ":nvhl" opt; do
 		l)
 			libonly=1
 		;;
+		d)
+			debug=1
+		;;
 		h)
 			echo "";
 			echo "Usage: $0 [OPTIONS] [<targets>]";
@@ -28,7 +32,8 @@ while getopts ":nvhl" opt; do
 			echo "Options:";
 			echo "  -n    Do not run configure, only make";
 			echo "  -v    Be verbose";
-			echo "  -l    Only build library (valid only for codyn or codyn_mono target)"
+			echo "  -l    Only build library (valid only for codyn or codyn_mono target)";
+			echo "  -d    Debug builds";
 			echo "  -h    Show this help message";
 			echo "";
 			exit 1;
@@ -135,7 +140,12 @@ function build_codyn
 	destdir="$d/.install"
 
 	echo "Building codyn..."
-	build "$codyn_dir" --disable-dependency-tracking --enable-framework || exit 1
+
+	if [ ! -z "$debug" ]; then
+		build "$codyn_dir" --disable-dependency-tracking --enable-framework --enable-debug || exit 1
+	else
+		build "$codyn_dir" --disable-dependency-tracking --enable-framework || exit 1
+	fi
 ) || exit 1;}
 
 function build_codyn_mono

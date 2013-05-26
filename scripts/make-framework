@@ -3,8 +3,16 @@
 import inspect, os, shutil, subprocess, fnmatch, glob, sys, re, collections
 
 version = None
+enable_debug = False
+args = []
 
-if len(sys.argv) <= 1:
+for arg in sys.argv[1:]:
+    if arg == '-d':
+        enable_debug = True
+    else:
+        args.append(arg)
+
+if len(args) == 0:
     try:
         f = open('../codyn/configure.ac', 'r')
         r = re.compile('AC_INIT\\(codyn, ([0-9.]+)\\)')
@@ -22,7 +30,7 @@ if len(sys.argv) <= 1:
             stderr.write('Please provide the framework version...\n')
             sys.exit(1)
 else:
-    version = sys.argv[1]
+    version = args[0]
 
 api_version = version.split('.')[0] + '.0'
 
@@ -259,12 +267,14 @@ class Framework:
 
         # Set the new id of the library
         if binary.endswith('.so') or binary.endswith('.dylib'):
-            subprocess.call(['strip', '-x', target])
+            if not enable_debug:
+                subprocess.call(['strip', '-x', target])
 
             # Set the new id
             subprocess.call(['install_name_tool', '-id', future, target])
         else:
-            subprocess.call(['strip', '-u', '-r', target])
+            if not enable_debug:
+                subprocess.call(['strip', '-u', '-r', target])
 
         # Resolve and copy external dependencies
         self.resolve_deps(target)
