@@ -81,8 +81,7 @@ config = {
         '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
 
         # Python rawc bindings
-        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': '@pysite-packages@/cdnrawc/',
-        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': '@py3site-packages@/cdnrawc/',
+        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': ['@pysite-packages@/cdnrawc/', '@py3site-packages@/cdnrawc/'],
 
         # Python 3 introspection python scripts
         '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
@@ -378,10 +377,16 @@ class Framework:
                 print('Warning: The glob `{0}\' did not result in any files'.format(g))
                 continue
 
-            target = self.repl(items[k])
+            target = items[k]
 
-            for f in files:
-                fn(f, target)
+            if not isinstance(target, list):
+                target = [target]
+
+            for t in target:
+                t = self.repl(t)
+
+                for f in files:
+                    fn(f, t)
 
     def rewrite_headers(self, rules):
         remap = {}
