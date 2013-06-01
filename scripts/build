@@ -127,8 +127,8 @@ function build_codyn
 		exit 1
 	fi
 
-	export CFLAGS='-arch i386 -arch x86_64'
-	export LDFLAGS='-arch i386 -arch x86_64'
+	export CFLAGS='-arch i386 -arch x86_64 -mmacosx-version-min=10.6 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+	export LDFLAGS='-arch i386 -arch x86_64 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 
 	# Setup full brew environment
 	unset dont_setup_brew
@@ -157,8 +157,8 @@ function build_codyn_mono
 
 	# Build codyn library but for use with mono. This means building just
 	# 32 bits and using the mono provided glib libraries
-	export CFLAGS='-arch i386'
-	export LDFLAGS='-arch i386'
+	export CFLAGS='-arch i386 -mmacosx-version-min=10.6 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+	export LDFLAGS='-arch i386 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 
 	mono_env
 
@@ -185,8 +185,8 @@ function build_rawc
 		exit 1
 	fi
 
-	export CFLAGS='-arch i386 -arch x86_64'
-	export LDFLAGS='-arch i386 -arch x86_64'
+	export CFLAGS='-arch i386 -arch x86_64 -mmacosx-version-min=10.6 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
+	export LDFLAGS='-arch i386 -arch x86_64 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 
 	mono_env
 	pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
