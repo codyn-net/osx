@@ -14,16 +14,19 @@ fi
 
 $brew tap jessevdk/codyn
 
-$brew "$@" install --universal --without-x --with-glib cairo
-
 $brew "$@" install --universal \
 	autoconf \
 	automake \
 	libtool \
 	glib \
+	python \
 	fontconfig \
 	freetype \
-	libpng \
+	libpng
+
+$brew "$@" install --universal --without-x --with-glib cairo
+
+$brew "$@" install --universal \
 	jessevdk/codyn/gobject-introspection \
 	jessevdk/codyn/py3cairo \
 	jessevdk/codyn/pygobject3 \
