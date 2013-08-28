@@ -82,7 +82,7 @@ config = {
         '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
 
         # Python rawc bindings
-        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': ['@pysite-packages@/cdnrawc/', '@py3site-packages@/cdnrawc/'],
+        '@monoinstalldir@/lib/python2.7/site-packages/cdn-rawc/__init__.py': ['@pysite-packages@/cdn-rawc/', '@py3site-packages@/cdn-rawc/'],
 
         # Python 3 introspection python scripts
         '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
@@ -96,8 +96,8 @@ config = {
         # Rawc
         '@monoinstalldir@/share/cdn-rawc-1.0': '@resources@/mono/share/',
         '@monoinstalldir@/lib/pkgconfig/cdn-rawc-1.0.pc': '@resources@/mono/lib/pkgconfig/',
-        '@monoinstalldir@/lib/cdnrawc/Codyn.dll.config': '@resources@/mono/lib/cdnrawc/',
-        '@monoinstalldir@/lib/cdnrawc/Cdn.RawC.dll.config': '@resources@/mono/lib/cdnrawc/',
+        '@monoinstalldir@/lib/cdn-rawc/Codyn.dll.config': '@resources@/mono/lib/cdn-rawc/',
+        '@monoinstalldir@/lib/cdn-rawc/Cdn.RawC.dll.config': '@resources@/mono/lib/cdn-rawc/',
         '@monoinstalldir@/lib/codyn-sharp-@api_version@/Codyn.dll': '@resources@/mono/lib/codyn-sharp-@api_version@/',
         '@monoinstalldir@/lib/codyn-sharp-@api_version@/Codyn.dll.config': '@resources@/mono/lib/codyn-sharp-@api_version@/',
         '@monoinstalldir@/lib/libcdnrawc-1.0.a': '@resources@/mono/lib/',
@@ -134,9 +134,9 @@ config = {
 
         # Rawc
         '@monoinstalldir@/bin/cdn-rawc': '@resources@/mono/bin/cdn-rawc',
-        '@monoinstalldir@/lib/cdnrawc/Cdn.RawC.dll': '@resources@/mono/lib/cdnrawc/',
-        '@monoinstalldir@/lib/cdnrawc/Codyn.dll': '@resources@/mono/lib/cdnrawc/',
-        '@monoinstalldir@/lib/cdnrawc/cdn-rawc.exe': '@resources@/mono/lib/cdnrawc/',
+        '@monoinstalldir@/lib/cdn-rawc/Cdn.RawC.dll': '@resources@/mono/lib/cdn-rawc/',
+        '@monoinstalldir@/lib/cdn-rawc/Codyn.dll': '@resources@/mono/lib/cdn-rawc/',
+        '@monoinstalldir@/lib/cdn-rawc/cdn-rawc.exe': '@resources@/mono/lib/cdn-rawc/',
 
         # Studio
         '@monoinstalldir@/bin/cdn-studio': '@resources@/mono/bin/cdn-studio',
