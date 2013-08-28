@@ -84,7 +84,7 @@ function build
 		fi
 
 		if [ $retval -eq 0 ]; then
-			(cd "$bdir" && make -j8 && make install DESTDIR="$destdir") 2>&1 >> $tmp;
+			(cd "$bdir" && make -j1 && make install DESTDIR="$destdir") 2>&1 >> $tmp;
 			retval=$?
 		fi
 	fi
@@ -189,6 +189,7 @@ function build_rawc
 	export LDFLAGS='-arch i386 -arch x86_64 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.6.sdk'
 
 	mono_env
+
 	pf="$d/.install-mono/Library/Frameworks/Codyn.framework/Resources/mono"
 
 	echo "Building rawc in $cdnrawc_dir..."
