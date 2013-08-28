@@ -32,3 +32,5 @@ $brew "$@" install --universal \
 	jessevdk/codyn/pygobject3 \
 	jessevdk/codyn/py3gobject3 \
 	jessevdk/codyn/json-glib
+
+$d/scripts/get-sources

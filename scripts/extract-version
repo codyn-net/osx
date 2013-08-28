@@ -3,10 +3,11 @@
 import sys, re
 
 version = None
+root = '.sources'
 
 if len(sys.argv) <= 1:
     try:
-        f = open('../codyn/configure.ac', 'r')
+        f = open(root + '/codyn/configure.ac', 'r')
         r = re.compile('AC_INIT\\(codyn, ([0-9.]+)\\)')
 
         for line in f.readlines():

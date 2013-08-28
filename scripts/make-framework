@@ -5,6 +5,7 @@ import inspect, os, shutil, subprocess, fnmatch, glob, sys, re, collections
 version = None
 enable_debug = False
 args = []
+root = ".sources"
 
 for arg in sys.argv[1:]:
     if arg == '-d':
@@ -14,7 +15,7 @@ for arg in sys.argv[1:]:
 
 if len(args) == 0:
     try:
-        f = open('../codyn/configure.ac', 'r')
+        f = open(root + '/codyn/configure.ac', 'r')
         r = re.compile('AC_INIT\\(codyn, ([0-9.]+)\\)')
 
         for line in f.readlines():

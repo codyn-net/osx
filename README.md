@@ -44,29 +44,17 @@ Prerequisites:
 ...The mono framework is required to install rawc and the studio. The mono
 ...framework installer can be obtained from the [mono website][mono website].
 
-5. Get the codyn sources.
-   
-   You should create a directory with the following structure:
-     * codyn/
-     * codyn-sharp/
-     * osx/ *(this repository)*
-     * rawc/
-     * biorob-math-sharp/
-     * plot-sharp/
-     * studio/
-
-   The sources can be either from [codyn git][codyn git] or from
-   [codyn releases][codyn releases].
-
-6. Bootstrap the dependencies.
+5. Bootstrap the dependencies.
    
    Run `scripts/bootstrap` to initialize homebrew and compile the dependencies.
    The resulting files will be installed in `osx/.brew` and `osx/.brewbuild`.
+   This will also fetch all the codyn sources needed to build the framework
+   in `.sources/`.
    
    All the dependencies are compiled as universal binaries. Where possible,
    OS X system libraries (such as libxml2) are used.
 
-7. Build codyn.
+6. Build codyn.
    
    Run `scripts/build` to build codyn. The resulting files will be installed in
    `osx/.install` and `osx/.install-mono`.
@@ -84,7 +72,7 @@ Prerequisites:
    When available, codyn-sharp and rawc are also built and installed in
    `osx/.install-mono` and will be bundled in the framework.
 
-8. Build the framework.
+7. Build the framework.
    
    Run `scripts/make-framework [<version>]` to build the codyn framework. The
    version specified is optional and when omitted is extracted from
@@ -94,7 +82,7 @@ Prerequisites:
    codyn binaries as a self-contained OS X framework. It will also provide
    all the necessary setup and bundled libraries to run rawc using mono.
 
-9. Build the installer.
+8. Build the installer.
    
    Run `scripts/make-pkg <version>` to build the framework installer. After
    completion, the result package `osx/Codyn-<version>.pkg` should be

@@ -3,7 +3,7 @@
 dont_setup_brew=1
 source $(dirname "$0")/env
 
-root=..
+root=.sources
 noconfigure=
 verbose=
 libonly=

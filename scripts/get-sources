@@ -1,0 +1,21 @@
+#!/bin/bash
+
+. $(dirname "$0")/env
+
+pkgs="codyn/codyn codyn/codyn-sharp codyn/rawc codyn/studio biorob-math-sharp plot-sharp"
+
+for pkg in $pkgs; do
+	tdir=$d/.sources/$(basename $pkg)
+
+	if [ ! -d "$tdir" ]; then
+		git clone git://git.codyn.net/$pkg "$tdir"
+	fi
+
+	(cd "$tdir";
+		git clean -xdf;
+		version=$(git tag -l | grep ^v[0-9] | sort -n | tail -n 1);
+		git checkout -b osx_$version $version 2>/dev/null;
+		git checkout osx_$version 2>/dev/null;
+		git reset --hard $version 2>/dev/null;
+	)
+done
