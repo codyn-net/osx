@@ -9,8 +9,6 @@ verbose=
 libonly=
 debug=
 
-export PKG_CONFIG_PATH="$b/lib/pkgconfig:$PKG_CONFIG_PATH"
-
 while getopts ":nvhld" opt; do
 	case $opt in
 		n)
@@ -136,7 +134,7 @@ function build_codyn
 	unset dont_setup_brew
 	source $(dirname "$0")/env
 
-	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$b/lib/pkgconfig:$b/Cellar/libffi/3.0.13/lib/pkgconfig"
+	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$b/Cellar/libffi/3.0.13/lib/pkgconfig"
 
 	# install in .install
 	destdir="$d/.install"
