@@ -66,7 +66,9 @@ config = {
     },
 
     'data': {
-        '@installdir@/share/codyn-@api_version@': '@resources@/share/codyn-@api_version@',
+        '@installdir@/share/codyn-@api_version@/library': '@resources@/share/codyn-@api_version@/library',
+        '@installdir@/share/codyn-@api_version@/blender_codyn.zip': '@resources@/share/codyn-@api_version@/blender_codyn.zip',
+        '@installdir@/share/codyn-@api_version@/blender': '@resources@/share/codyn-@api_version@/blender/addons/blender_codyn',
         '@installdir@/share/emacs': '@resources@/share/',
         '@installdir@/share/texmf': '@resources@/share/',
         '@installdir@/share/gir-1.0/*.gir': '@resources@/share/gir-1.0/',
@@ -79,10 +81,10 @@ config = {
         '@brewpydir@/gi/overrides/*.py': '@pysite-packages@/gi/overrides/',
         '@brewpydir@/gi/repository/*.py': '@pysite-packages@/gi/repository/',
 
-        '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@pysite-packages@/gi/overrides/',
+        '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': ['@pysite-packages@/gi/overrides/', '@py3site-packages@/gi/overrides/'],
 
         # Python rawc bindings
-        '@monoinstalldir@/lib/python2.7/site-packages/cdn-rawc/__init__.py': ['@pysite-packages@/cdn-rawc/', '@py3site-packages@/cdn-rawc/'],
+        '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': ['@pysite-packages@/cdnrawc/', '@py3site-packages@/cdnrawc/'],
 
         # Python 3 introspection python scripts
         '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
@@ -90,8 +92,6 @@ config = {
         '@brewpy3dir@/gi/_gobject/*.py': '@py3site-packages@/gi/_gobject/',
         '@brewpy3dir@/gi/overrides/*.py': '@py3site-packages@/gi/overrides/',
         '@brewpy3dir@/gi/repository/*.py': '@py3site-packages@/gi/repository/',
-
-        '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': '@py3site-packages@/gi/overrides/',
 
         # Rawc
         '@monoinstalldir@/share/cdn-rawc-1.0': '@resources@/mono/share/',

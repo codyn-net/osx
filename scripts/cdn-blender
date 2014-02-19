@@ -8,9 +8,10 @@ export GI_TYPELIB_PATH="$res/lib/girepository-1.0:$GI_TYPELIB_PATH"
 export GIR_DIRS="$res/share/gir-1.0:$GIR_DIRS"
 export PYTHONPATH="$res/lib/python3.3/site-packages:$PYTHONPATH"
 export DYLD_LIBRARY_PATH="$fw/Libraries:$DYLD_LIBRARY_PATH"
+export BLENDER_USER_SCRIPTS="$res/share/codyn-3.0/blender"
 
 if [ ! -z "$DEBUG_BLENDER" ]; then
-	exec /Applications/blender.app/Contents/MacOS/blender "$@"
+	exec /Applications/blender.app/Contents/MacOS/blender "$@" --addons blender_codyn
 else
-	open -a blender
+	open -a blender --args --addons blender_codyn
 fi
