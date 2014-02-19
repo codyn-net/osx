@@ -4,6 +4,10 @@
 
 if [ ! -f "$brewbuild" ]; then
 	git clone https://github.com/mxcl/homebrew "$bb"
+
+	if [ ! -f "$brew" ]; then
+		cp -r "$bb" "$b"
+	fi
 fi
 
 INSTALL=install
