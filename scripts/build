@@ -9,6 +9,10 @@ verbose=
 libonly=
 debug=
 
+macosx=$MACOSX_DEPLOYMENT_TARGET
+
+export PKG_CONFIG_PATH="$b/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 while getopts ":nvhld" opt; do
 	case $opt in
 		n)
@@ -127,8 +131,8 @@ function build_codyn
 		exit 1
 	fi
 
-	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
-	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
+	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
+	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
 
 	# Setup full brew environment
 	unset dont_setup_brew
@@ -157,8 +161,8 @@ function build_codyn_mono
 
 	# Build codyn library but for use with mono. This means building just
 	# 32 bits and using the mono provided glib libraries
-	export CFLAGS="-arch i386 -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
-	export LDFLAGS="-arch i386 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
+	export CFLAGS="-arch i386 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
+	export LDFLAGS="-arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
 
 	mono_env
 
@@ -185,8 +189,8 @@ function build_rawc
 		exit 1
 	fi
 
-	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$MACOSX_DEPLOYMENT_TARGET -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
-	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
+	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
+	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
 
 	mono_env
 
