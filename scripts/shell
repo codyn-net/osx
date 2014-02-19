@@ -5,6 +5,6 @@
 prefix="$d/install"
 
 export CFLAGS='-arch i386 -arch x86_64'
-export LDFLAGS='-arch i386 -arch x86_64'
+export LDFLAGS='-arch i386 -arch x86_64 -headerpad_max_install_names'
 
 (cd .. && bash)
