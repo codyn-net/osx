@@ -6,5 +6,6 @@ prefix="$d/install"
 
 export CFLAGS='-arch i386 -arch x86_64'
 export LDFLAGS='-arch i386 -arch x86_64 -headerpad_max_install_names'
+export PS1EXTRA=" \[\033[0;35m\](osx)\[\033[0m\]"
 
-(cd .. && bash)
+(cd $(dirname "$0")/.. && bash -l)
