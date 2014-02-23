@@ -146,6 +146,7 @@ function build_codyn
 	echo "Building codyn..."
 
 	if [ ! -z "$debug" ]; then
+		export CFLAGS="$CFLAGS -g -O0"
 		build "$codyn_dir" --disable-dependency-tracking --enable-framework --enable-debug || exit 1
 	else
 		build "$codyn_dir" --disable-dependency-tracking --enable-framework || exit 1
