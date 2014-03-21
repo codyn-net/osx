@@ -46,6 +46,8 @@ config = {
         '@installdir@/bin/cdn-context': '@resources@/bin/',
         '@installdir@/bin/cdn-monitor': '@resources@/bin/',
         '@installdir@/bin/cdn-parser': '@resources@/bin/',
+        '@installdir@/bin/cdn-python': '@resources@/bin/',
+        '@installdir@/bin/cdn-python3': '@resources@/bin/',
 
         '@installdir@/lib/codyn-@api_version@/io/*.so': '@resources@/lib/codyn-@api_version@/io/',
 
@@ -82,6 +84,9 @@ config = {
         '@brewpydir@/gi/repository/*.py': '@pysite-packages@/gi/repository/',
 
         '@installdir@/lib/python2.7/site-packages/gi/overrides/Cdn.py': ['@pysite-packages@/gi/overrides/', '@py3site-packages@/gi/overrides/'],
+
+        '@installdir@/lib/python2.7/site-packages/cdnrepl/*.py': '@pysite-packages@/cdnrepl/',
+        '@installdir@/lib/python2.7/site-packages/cdnrepl/plot.html': '@pysite-packages@/cdnrepl/',
 
         # Python rawc bindings
         '@monoinstalldir@/lib/python2.7/site-packages/cdnrawc/__init__.py': ['@pysite-packages@/cdnrawc/', '@py3site-packages@/cdnrawc/'],
@@ -128,9 +133,9 @@ config = {
 
     'scripts': {
         # Codyn python script wrapper
-        '@rootdir@/scripts/cdn-python': '@resources@/bin/cdn-python',
         '@rootdir@/scripts/cdn-blender': '@resources@/bin/cdn-blender',
         '@installdir@/bin/cdn-monitor-i': '@resources@/bin/',
+        '@installdir@/bin/cdn-repl': '@resources@/bin/',
 
         # Rawc
         '@monoinstalldir@/bin/cdn-rawc': '@resources@/mono/bin/cdn-rawc',
