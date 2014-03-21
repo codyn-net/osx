@@ -10,7 +10,7 @@ bb="$d/.brewbuild"
 brew="$b/bin/brew"
 brewbuild="$bb/bin/brew"
 
-export MACOSX_DEPLOYMENT_TARGET="10.8"
+export MACOSX_DEPLOYMENT_TARGET="10.9"
 
 export PATH="$bb/bin:$PATH"
 export PKG_CONFIG_PATH="$bb/lib/pkgconfig:$PKG_CONFIG_PATH"
