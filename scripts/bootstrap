@@ -12,7 +12,13 @@ fi
 
 INSTALL=install
 
-$brewbuild $INSTALL autoconf automake libtool pkg-config gettext
+$brewbuild $INSTALL --universal		\
+	autoconf			\
+	automake			\
+	libtool				\
+	pkg-config			\
+	xz				\
+	gettext
 
 if [ ! -f "$brew" ]; then
 	git clone https://github.com/mxcl/homebrew "$b"
@@ -20,23 +26,24 @@ fi
 
 $brew tap jessevdk/codyn
 
-$brew "$@" $INSTALL --universal \
-	autoconf \
-	automake \
-	libtool \
-	glib \
-	fontconfig \
-	freetype \
-	libpng \
+$brew "$@" $INSTALL --universal		\
+	xz				\
+	autoconf			\
+	automake			\
+	libtool				\
+	glib				\
+	fontconfig			\
+	freetype			\
+	libpng				\
 	python3
 
 $brew "$@" $INSTALL --universal --without-x --with-glib cairo
 
-$brew "$@" $INSTALL --universal \
-	jessevdk/codyn/gobject-introspection \
-	jessevdk/codyn/py3cairo \
-	jessevdk/codyn/pygobject3 \
-	jessevdk/codyn/py3gobject3 \
+$brew "$@" $INSTALL --universal				\
+	jessevdk/codyn/gobject-introspection		\
+	jessevdk/codyn/py3cairo				\
+	jessevdk/codyn/pygobject3			\
+	jessevdk/codyn/py3gobject3			\
 	jessevdk/codyn/json-glib
 
-$d/scripts/get-sources
+#$d/scripts/get-sources
