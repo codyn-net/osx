@@ -42,11 +42,9 @@ $brew "$@" $INSTALL --universal		\
 
 $brew "$@" $INSTALL --universal --without-x --with-glib cairo
 
+$brew "$@" $INSTALL --universal	--with-python3 --with-python2 pygobject3
+
 $brew "$@" $INSTALL --universal				\
-	jessevdk/codyn/gobject-introspection		\
-	jessevdk/codyn/py3cairo				\
-	jessevdk/codyn/pygobject3			\
-	jessevdk/codyn/py3gobject3			\
 	jessevdk/codyn/json-glib
 
 #$d/scripts/get-sources
