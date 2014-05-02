@@ -20,6 +20,8 @@ $brewbuild $INSTALL --universal		\
 	xz				\
 	gettext
 
+$brewbuild link --force autoconf automake libtool pkg-config gettext
+
 if [ ! -f "$brew" ]; then
 	git clone https://github.com/mxcl/homebrew "$b"
 fi
@@ -36,6 +38,8 @@ $brew "$@" $INSTALL --universal		\
 	freetype			\
 	libpng				\
 	python
+
+$brew link --force autoconf automake libtool
 
 $brew "$@" $INSTALL --universal		\
 	jessevdk/codyn/python3

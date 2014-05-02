@@ -88,7 +88,7 @@ function build
 		fi
 
 		if [ $retval -eq 0 ]; then
-			(cd "$bdir" && make -j1 && make install DESTDIR="$destdir") 2>&1 >> $tmp;
+			(cd "$bdir" && make "$MAKEFLAGS" && make install DESTDIR="$destdir") 2>&1 >> $tmp;
 			retval=$?
 		fi
 	fi
@@ -117,6 +117,7 @@ function mono_env
 
 	export PKG_CONFIG_PATH="$fwroot/lib/pkgconfig:$destdir$prefix/lib/pkgconfig:$PKG_CONFIG_PATH"
 	export PATH="$fwroot/bin:$PATH"
+	export MAKEFLAGS="-j1"
 }
 
 codyn_dir="$root/codyn"
@@ -131,14 +132,15 @@ function build_codyn
 		exit 1
 	fi
 
-	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
-	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
+	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx"
+	export LDFLAGS="-arch i386 -arch x86_64 -Wl,-headerpad_max_install_names"
 
 	# Setup full brew environment
 	unset dont_setup_brew
 	source $(dirname "$0")/env
 
 	export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$b/Cellar/libffi/3.0.13/lib/pkgconfig"
+	export MAKEFLAGS="INTROSPECTION_SCANNER=\$(srcdir)/giscanner-wrapper \$(shell pkg-config --variable=g_ir_scanner gobject-introspection-1.0)"
 
 	# install in .install
 	destdir="$d/.install"
@@ -162,8 +164,8 @@ function build_codyn_mono
 
 	# Build codyn library but for use with mono. This means building just
 	# 32 bits and using the mono provided glib libraries
-	export CFLAGS="-arch i386 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
-	export LDFLAGS="-arch i386 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
+	export CFLAGS="-arch i386 -mmacosx-version-min=$macosx"
+	export LDFLAGS="-arch i386 -Wl,-headerpad_max_install_names"
 
 	mono_env
 
@@ -190,8 +192,8 @@ function build_rawc
 		exit 1
 	fi
 
-	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk"
-	export LDFLAGS="-arch i386 -arch x86_64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$macosx.sdk -Wl,-headerpad_max_install_names"
+	export CFLAGS="-arch i386 -arch x86_64 -mmacosx-version-min=$macosx"
+	export LDFLAGS="-arch i386 -arch x86_64 -Wl,-headerpad_max_install_names"
 
 	mono_env
 
