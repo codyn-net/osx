@@ -10,13 +10,10 @@ bb="$d/.brewbuild"
 brew="$b/bin/brew"
 brewbuild="$bb/bin/brew"
 
-export MACOSX_DEPLOYMENT_TARGET="10.9"
+export MACOSX_DEPLOYMENT_TARGET=$(sw_vers -productVersion | sed 's/\([0-9]*\.[0-9]*\).*/\1/g')
 
 export PATH="$bb/bin:$PATH"
 export PKG_CONFIG_PATH="$bb/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-export HOMEBREW_SDKROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
-export SDKROOT="/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX$MACOSX_DEPLOYMENT_TARGET.sdk"
 
 if [ -z "$dont_setup_brew" ] && [ -x "$brew" ]; then
 	export PATH="$b/bin:$PATH"
