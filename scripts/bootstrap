@@ -35,7 +35,10 @@ $brew "$@" $INSTALL --universal		\
 	fontconfig			\
 	freetype			\
 	libpng				\
-	python3
+	python
+
+$brew "$@" $INSTALL --universal		\
+	jessevdk/codyn/python3
 
 $brew "$@" $INSTALL --universal --without-x --with-glib cairo
 
