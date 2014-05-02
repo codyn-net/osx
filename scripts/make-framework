@@ -74,7 +74,9 @@ config = {
         '@installdir@/share/emacs': '@resources@/share/',
         '@installdir@/share/texmf': '@resources@/share/',
         '@installdir@/share/gir-1.0/*.gir': '@resources@/share/gir-1.0/',
+        '@brewdir@/share/gir-1.0/*.gir': '@resources@/share/gir-1.0/',
         '@installdir@/lib/girepository-1.0/*.typelib': '@resources@/lib/girepository-1.0/',
+        '@brewdir@/lib/girepository-1.0/*.typelib': '@resources@/lib/girepository-1.0/',
 
         # Python introspection python scripts
         '@brewpydir@/gi/*.py': '@pysite-packages@/gi/',
