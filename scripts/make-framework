@@ -145,7 +145,16 @@ config = {
         '@monoinstalldir@/bin/cdn-studio': '@resources@/mono/bin/cdn-studio',
         '@monoinstalldir@/lib/cdn-studio/*.dll': '@resources@/mono/lib/cdn-studio/',
         '@monoinstalldir@/lib/cdn-studio/cdn-studio.exe': '@resources@/mono/lib/cdn-studio/',
-    }
+    },
+
+    'applications': [
+        {
+            'name': 'Codyn Studio',
+            'executable': '@resources@/mono/bin/cdn-studio',
+            'icon': 'data/cdn-studio.icns',
+            'plist': 'data/Studio.plist'
+        }
+    ]
 }
 
 scriptdir = os.path.dirname(os.path.realpath(inspect.getfile(inspect.currentframe())))
@@ -188,6 +197,8 @@ class Framework:
         self._headers = self._versions_a + '/Headers'
         self._libraries = self._versions_a + '/Libraries'
         self._resources = self._versions_a + '/Resources'
+
+        self._root = os.path.dirname(self._path)
 
         self._fwpath = '/Library/Frameworks/' + os.path.basename(self._path)
 
@@ -420,6 +431,38 @@ class Framework:
                     f.flush()
                     f.close()
 
+    def create_application(self, app):
+        name = self.repl(app['name'])
+        apppath = os.path.join(self._root, name + '.app')
+        shutil.rmtree(apppath, ignore_errors=True)
+
+        for d in ['MacOS', 'Resources']:
+            try:
+                os.makedirs(os.path.join(apppath, 'Contents', d))
+            except:
+                pass
+
+        executable = self.repl(app['executable'])
+        executable_name = os.path.basename(executable)
+
+        # Main executable
+        os.symlink(self.future_path(self.repl(executable)), os.path.join(apppath, 'Contents', 'MacOS', executable_name))
+
+        # plist
+        plist = os.path.join(apppath, 'Contents', 'Info.plist')
+        shutil.copyfile(self.repl(app['plist']), plist)
+        self._interpolate_file(plist)
+
+        # icon
+        icon = self.repl(app['icon'])
+        shutil.copyfile(icon, os.path.join(apppath, 'Contents', 'Resources', os.path.basename(icon)))
+
+        print('Application created in {0}.app'.format(name))
+
+    def create_applications(self, applications):
+        for app in applications:
+            self.create_application(app)
+
 # Create the framework
 framework = Framework(os.path.join(rootdir, config['name']))
 
@@ -443,6 +486,9 @@ framework.copy_glob(config['headers'], framework.copy_header)
 
 # Rewrite header includes
 framework.rewrite_headers(config['header_rewrites'])
+
+# Create applications
+framework.create_applications(config['applications'])
 
 print('Framework created in {0}.framework'.format(framework.name))
 
