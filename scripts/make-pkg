@@ -11,6 +11,11 @@ sudo chown -R root:admin "$tmp/Codyn.framework"
 
 pkgmaker=/Applications/PackageMaker.app/Contents/MacOS/PackageMaker
 
+if [ ! -d "$pkgmaker" ];
+then
+	pkgmaker=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
+fi
+
 cp -a "$d/Codyn.pmdoc" "$tmp/"
 pkg="Codyn-$version.pkg"
 
