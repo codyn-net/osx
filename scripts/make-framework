@@ -297,7 +297,7 @@ class Framework:
         os.symlink('../' + self._name, self.libraries(os.path.basename(self.repl(binary))))
 
     def otool_deps(self, path):
-        out = subprocess.check_output(['otool', '-L', path])
+        out = subprocess.Popen(['otool', '-L', path], stdout=subprocess.PIPE).communicate()[0]
         return [x.strip().split(' ')[0] for x in out.splitlines()[1:]]
 
     def resolve_deps(self, libname):
