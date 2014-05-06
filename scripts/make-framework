@@ -58,13 +58,11 @@ config = {
 
         # Python introspection libraries
         '@brewpydir@/gi/_gi.so': '@pysite-packages@/gi/_gi.so',
-        '@brewpydir@/gi/_glib/_glib.so': '@pysite-packages@/gi/_glib/_glib.so',
-        '@brewpydir@/gi/_gobject/_gobject.so': '@pysite-packages@/gi/_gobject/_gobject.so',
+        '@brewpydir@/gi/_gi_cairo.so': '@pysite-packages@/gi/_gi_cairo.so',
 
         # Python 3 introspection libraries
         '@brewpy3dir@/gi/_gi.so': '@py3site-packages@/gi/_gi.so',
-        '@brewpy3dir@/gi/_glib/_glib.so': '@py3site-packages@/gi/_glib/_glib.so',
-        '@brewpy3dir@/gi/_gobject/_gobject.so': '@py3site-packages@/gi/_gobject/_gobject.so',
+        '@brewpy3dir@/gi/_gi_cairo.so': '@py3site-packages@/gi/_gi_cairo.so',
     },
 
     'data': {
@@ -80,7 +78,6 @@ config = {
 
         # Python introspection python scripts
         '@brewpydir@/gi/*.py': '@pysite-packages@/gi/',
-        '@brewpydir@/gi/_glib/*.py': '@pysite-packages@/gi/_glib/',
         '@brewpydir@/gi/_gobject/*.py': '@pysite-packages@/gi/_gobject/',
         '@brewpydir@/gi/overrides/*.py': '@pysite-packages@/gi/overrides/',
         '@brewpydir@/gi/repository/*.py': '@pysite-packages@/gi/repository/',
@@ -95,7 +92,6 @@ config = {
 
         # Python 3 introspection python scripts
         '@brewpy3dir@/gi/*.py': '@py3site-packages@/gi/',
-        '@brewpy3dir@/gi/_glib/*.py': '@py3site-packages@/gi/_glib/',
         '@brewpy3dir@/gi/_gobject/*.py': '@py3site-packages@/gi/_gobject/',
         '@brewpy3dir@/gi/overrides/*.py': '@py3site-packages@/gi/overrides/',
         '@brewpy3dir@/gi/repository/*.py': '@py3site-packages@/gi/repository/',
