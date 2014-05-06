@@ -154,6 +154,11 @@ config = {
             'icon': 'data/cdn-studio.icns',
             'plist': 'data/Studio.plist'
         }
+    ],
+
+    'linked-binaries': [
+        '@resources@/bin/cdn-*',
+        '@resources@/mono/bin/cdn-*'
     ]
 }
 
@@ -463,6 +468,21 @@ class Framework:
         for app in applications:
             self.create_application(app)
 
+    def link_binaries(self, binaries):
+        p = os.path.join(self._root, 'bin')
+        shutil.rmtree(p, ignore_errors=True)
+
+        try:
+            os.makedirs(p)
+        except:
+            pass
+
+        for b in binaries:
+            files = glob.glob(self.repl(b))
+
+            for f in files:
+                os.symlink(self.future_path(f), os.path.join(p, os.path.basename(f)))
+
 # Create the framework
 framework = Framework(os.path.join(rootdir, config['name']))
 
@@ -489,6 +509,9 @@ framework.rewrite_headers(config['header_rewrites'])
 
 # Create applications
 framework.create_applications(config['applications'])
+
+# Link bin
+framework.link_binaries(config['linked-binaries'])
 
 print('Framework created in {0}.framework'.format(framework.name))
 
