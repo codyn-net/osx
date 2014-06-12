@@ -7,7 +7,7 @@ version=$($(dirname $0)/extract-version) || exit 1
 tmp=$(mktemp -d -t make-cdn-pkg)
 
 cp -a "$d/Codyn.framework" "$tmp/"
-sudo chown -R root:admin "$tmp/Codyn.framework"
+sudo chown -Rh root:admin "$tmp/Codyn.framework"
 
 cp -a "$d/Codyn Studio.app" "$tmp/"
 sudo chown -R root:admin "$tmp/Codyn Studio.app"
@@ -25,7 +25,7 @@ fi
 cp -a "$d/Codyn.pmdoc" "$tmp/"
 pkg="Codyn-$version.pkg"
 
-sudo chown -R root:admin "$tmp/bin"
+sudo chown -Rh root:admin "$tmp/bin"
 
 echo "Making package..."
 
