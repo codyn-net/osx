@@ -73,7 +73,7 @@ function build
 	fi
 
 	if [ ! -z "$CODYN_SHELL" ]; then
-		(cd "$bdir" && echo "./$configure $args $@" && echo "make install DESTDIR=\"$destdir\"" && bash)
+		(cd "$bdir" && echo "./$configure $args $@" && echo make "$MAKEFLAGS" && echo "make install DESTDIR=\"$destdir\"" && bash)
 		retval=$?
 	else
 		retval=0
