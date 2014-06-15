@@ -107,7 +107,7 @@ config = {
 
         # Studio
         '@monoinstalldir@/lib/cdn-studio/*.config': '@resources@/mono/lib/cdn-studio/',
-        '@monoinstalldir@/share/cdnstudio': '@resources@/mono/share/',
+        '@monoinstalldir@/share/cdn-studio': '@resources@/mono/share/',
 
         '@monoinstalldir@/share/icons': '@resources@/mono/share/',
         '@monoinstalldir@/share/applications': '@resources@/mono/share/',
