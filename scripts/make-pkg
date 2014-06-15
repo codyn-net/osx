@@ -17,7 +17,7 @@ sudo chown -R root:admin "$tmp/bin"
 
 pkgmaker=/Applications/PackageMaker.app/Contents/MacOS/PackageMaker
 
-if [ ! -d "$pkgmaker" ];
+if [ ! -f "$pkgmaker" ];
 then
 	pkgmaker=/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker
 fi
